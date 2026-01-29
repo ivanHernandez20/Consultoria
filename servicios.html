@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios - Consultorio de Sistemas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar (igual que index.html) -->
+    
+    <div class="container mt-5 pt-5">
+        <h1 class="text-center mb-5">Nuestros Servicios</h1>
+        
+        <div class="row">
+            <!-- Lista de servicios -->
+            <div class="col-md-4">
+                <div class="list-group" id="serviciosList">
+                    <a href="#" class="list-group-item list-group-item-action active" data-bs-target="#ciberseguridad">
+                        Ciberseguridad
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" data-bs-target="#cloud">
+                        Infraestructura Cloud
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" data-bs-target="#desarrollo">
+                        Desarrollo de Software
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" data-bs-target="#bases">
+                        Bases de Datos
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" data-bs-target="#redes">
+                        Redes y Comunicaciones
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" data-bs-target="#soporte">
+                        Soporte Técnico
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Detalle del servicio -->
+            <div class="col-md-8">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="ciberseguridad">
+                        <h3>Ciberseguridad</h3>
+                        <p>Servicios completos de protección para tus sistemas:</p>
+                        <ul>
+                            <li>Análisis de vulnerabilidades</li>
+                            <li>Firewall y protección perimetral</li>
+                            <li>Monitorización 24/7</li>
+                            <li>Plan de respuesta a incidentes</li>
+                        </ul>
+                    </div>
+                    <!-- Más servicios... -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre servicios
+        document.querySelectorAll('#serviciosList a').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('#serviciosList a').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const target = this.getAttribute('data-bs-target');
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
+                document.querySelector(target).classList.add('show', 'active');
+            });
+        });
+    </script>
+</body>
+</html>
