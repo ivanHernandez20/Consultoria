@@ -1,6 +1,6 @@
-<?php 
-    function jsonResponse($data, $code = 200){
-        http_response_code($code);
+<?php
+    function jsonResponse($data, $status = 200) {
+        http_response_code($status);
         header("Content-Type: application/json");
         echo json_encode($data);
         exit;
