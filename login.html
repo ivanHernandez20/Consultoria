@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | SysConsult</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --gradient-bg: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+    
+        .bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+        }
+        
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -100px;
+        }
+        
+    
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            z-index: 10;
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+    
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-icon {
+            font-size: 42px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo p {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+    
+        .user-type-selector {
+            display: flex;
+            background: #f1f3f9;
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .user-type-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .user-type-btn i {
+            font-size: 18px;
+        }
+        
+        .user-type-btn.active {
+            color: var(--primary-color);
+        }
+        
+        .slider-bg {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+    
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+            transition: var(--transition);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: white;
+            color: var(--dark-color);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+        
+        .form-control:focus + i {
+            color: var(--primary-color);
+        }
+        
+
+    
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .forgot-password:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+
+        @media (max-width: 576px) {
+            .login-card {
+                padding: 40px 25px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .user-type-btn span {
+                display: none;
+            }
+            
+            .user-type-btn i {
+                font-size: 20px;
+            }
+        }
+        
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .login-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .form-group {
+            animation: fadeIn 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .btn-submit { animation-delay: 0.3s; }
+        .login-footer { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-decoration">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+    </div>
+    
+
+    <div class="login-container">
+        <div class="login-card">
+
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h1>SysConsult</h1>
+                <p>Consultoría de Ingeniería en Sistemas</p>
+            </div>
+            
+
+            <div class="user-type-selector">
+                <div class="slider-bg" id="sliderBg"></div>
+                <button type="button" class="user-type-btn active" id="btnCliente" data-type="cliente">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Cliente</span>
+                </button>
+                <button type="button" class="user-type-btn" id="btnAdmin" data-type="admin">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Administrador</span>
+                </button>
+            </div>
+            
+
+            <form id="loginForm" action="procesar_login.php" method="POST">
+                <input type="hidden" name="tipo_usuario" value="cliente" id="tipoUsuario">
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="nombre@empresa.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Ingresar al Sistema</span>
+                </button>
+                
+                <div class="login-footer">
+                    <a href="#" class="forgot-password">
+                        <i class="fas fa-key"></i>
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        const sliderBg = document.getElementById('sliderBg');
+        const btnCliente = document.getElementById('btnCliente');
+        const btnAdmin = document.getElementById('btnAdmin');
+        const tipoUsuario = document.getElementById('tipoUsuario');
+        const loginForm = document.getElementById('loginForm');
+        
+
+        function cambiarTipoUsuario(tipo) {
+
+            if (tipo === 'cliente') {
+                btnCliente.classList.add('active');
+                btnAdmin.classList.remove('active');
+                sliderBg.style.transform = 'translateX(0)';
+            } else {
+                btnAdmin.classList.add('active');
+                btnCliente.classList.remove('active');
+                sliderBg.style.transform = 'translateX(100%)';
+            }
+            
+
+            tipoUsuario.value = tipo;
+            
+    
+            loginForm.style.opacity = '0.7';
+            setTimeout(() => {
+                loginForm.style.opacity = '1';
+            }, 150);
+        }
+        
+    
+        btnCliente.addEventListener('click', () => cambiarTipoUsuario('cliente'));
+        btnAdmin.addEventListener('click', () => cambiarTipoUsuario('admin'));
+        
+    
+        const formInputs = document.querySelectorAll('.form-control');
+        formInputs.forEach(input => {
+    
+            input.addEventListener('focus', function() {
+                this.parentElement.parentElement.querySelector('.form-label').style.color = 'var(--primary-color)';
+            });
+            
+    
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.parentElement.querySelector('.form-label').style.color = '';
+                }
+            });
+        });
+        
+    
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+    
+            const submitBtn = this.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Verificando...</span>';
+            submitBtn.disabled = true;
+            
+    
+            setTimeout(() => {
+    
+                const tipo = tipoUsuario.value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+    
+                if (email && password) {
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i><span>Acceso concedido</span>';
+                    submitBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                    
+    
+                    setTimeout(() => {
+                        if (tipo === 'admin') {
+                            window.location.href = 'admin/dashboard.php';
+                        } else {
+                            window.location.href = 'cliente/dashboard.php';
+                        }
+                    }, 800);
+                } else {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    alert('Por favor, completa todos los campos');
+                }
+            }, 1500);
+        });
+        
+    
+        document.addEventListener('DOMContentLoaded', () => {
+    
+            const loginCard = document.querySelector('.login-card');
+            loginCard.style.animation = 'fadeIn 0.6s ease-out';
+            
+            
+    
+            btnCliente.title = "Acceder como cliente para gestionar tus servicios";
+            btnAdmin.title = "Acceder como administrador del sistema";
+        });
+    </script>
+</body>
+</html>
