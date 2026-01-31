@@ -1,16 +1,19 @@
 FROM php:8.2-apache
 
-# Habilitar extensiones necesarias para PostgreSQL (Supabase)
-RUN docker-php-ext-install pdo pdo_pgsql
+# Instalar dependencias del sistema necesarias para PostgreSQL
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Habilitar mod_rewrite (opcional pero recomendado)
+# Habilitar mod_rewrite
 RUN a2enmod rewrite
 
 # Copiar el proyecto al contenedor
 COPY . /var/www/html/
 
-# Permisos correctos
+# Permisos
 RUN chown -R www-data:www-data /var/www/html
 
-# Puerto que usará Render
 EXPOSE 80
