@@ -326,170 +326,38 @@
 </head>
 <body>
 
-    <div class="bg-decoration">
-        <div class="bg-circle circle-1"></div>
-        <div class="bg-circle circle-2"></div>
-    </div>
-    
+    <div class="login-card">
+        <div class="logo">
+            <div class="logo-icon"> <i class="fas fa-code-branch"></i> </div>
+            <h1>SysConsult</h1>
+            <p class="text-muted">Acceso Administrador</p>
+        </div>    
 
-    <div class="login-container">
-        <div class="login-card">
-
-            <div class="logo">
-                <div class="logo-icon"> <i class="fas fa-code-branch"></i> </div>
-                <h1>SysConsult</h1>
-                <p>Consultoría de Ingeniería en Sistemas</p>
+        <form id="loginForm" action="backend/auth/login.php" method="POST">
+            <input type="hidden" name="tipo_usuario" value="Administrador">
+            
+            <!-- CORREO -->
+            <div class="mb-3">
+                <label class="form-label">Correo Electrónico</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="nombre@outlook.com" required>
+                </div>
             </div>
             
-
-            <div class="user-type-selector">
-                <div class="slider-bg" id="sliderBg"></div>
-                <button type="button" class="user-type-btn active" id="btnCliente" data-type="cliente">
-                    <i class="fas fa-user-tie"></i>
-                    <span>Cliente</span>
-                </button>
-                <button type="button" class="user-type-btn" id="btnAdmin" data-type="admin">
-                    <i class="fas fa-user-cog"></i>
-                    <span>Administrador</span>
-                </button>
+            <!-- CONTRASEÑA -->
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
+                </div>
             </div>
             
-
-            <form id="loginForm" action="procesar_login.php" method="POST">
-                <input type="hidden" name="tipo_usuario" value="cliente" id="tipoUsuario">
-                
-                <div class="form-group">
-                    <label for="email" class="form-label">Correo Electrónico</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="nombre@empresa.com" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Ingresar al Sistema</span>
-                </button>
-                
-                <div class="login-footer">
-                    <a href="#" class="forgot-password">
-                        <i class="fas fa-key"></i>
-                        ¿Olvidaste tu contraseña?
-                    </a>
-                </div>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-login w-100">
+                <i class="fas fa-sign-in-alt me-2"></i> Ingresar al Sistema
+            </button>
+        </form>
     </div>
-
-    <script>
-
-        const sliderBg = document.getElementById('sliderBg');
-        const btnCliente = document.getElementById('btnCliente');
-        const btnAdmin = document.getElementById('btnAdmin');
-        const tipoUsuario = document.getElementById('tipoUsuario');
-        const loginForm = document.getElementById('loginForm');
-        
-
-        function cambiarTipoUsuario(tipo) {
-
-            if (tipo === 'cliente') {
-                btnCliente.classList.add('active');
-                btnAdmin.classList.remove('active');
-                sliderBg.style.transform = 'translateX(0)';
-            } else {
-                btnAdmin.classList.add('active');
-                btnCliente.classList.remove('active');
-                sliderBg.style.transform = 'translateX(100%)';
-            }
-            
-
-            tipoUsuario.value = tipo;
-            
-    
-            loginForm.style.opacity = '0.7';
-            setTimeout(() => {
-                loginForm.style.opacity = '1';
-            }, 150);
-        }
-        
-    
-        btnCliente.addEventListener('click', () => cambiarTipoUsuario('cliente'));
-        btnAdmin.addEventListener('click', () => cambiarTipoUsuario('admin'));
-        
-    
-        const formInputs = document.querySelectorAll('.form-control');
-        formInputs.forEach(input => {
-    
-            input.addEventListener('focus', function() {
-                this.parentElement.parentElement.querySelector('.form-label').style.color = 'var(--primary-color)';
-            });
-            
-    
-            input.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.parentElement.parentElement.querySelector('.form-label').style.color = '';
-                }
-            });
-        });
-        
-    
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-    
-            const submitBtn = this.querySelector('.btn-submit');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Verificando...</span>';
-            submitBtn.disabled = true;
-            
-    
-            setTimeout(() => {
-    
-                const tipo = tipoUsuario.value;
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                
-    
-                if (email && password) {
-                    submitBtn.innerHTML = '<i class="fas fa-check"></i><span>Acceso concedido</span>';
-                    submitBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-                    
-    
-                    setTimeout(() => {
-                        if (tipo === 'admin') {
-                            window.location.href = 'admin/dashboard.php';
-                        } else {
-                            window.location.href = 'cliente/dashboard.php';
-                        }
-                    }, 800);
-                } else {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    alert('Por favor, completa todos los campos');
-                }
-            }, 1500);
-        });
-        
-    
-        document.addEventListener('DOMContentLoaded', () => {
-    
-            const loginCard = document.querySelector('.login-card');
-            loginCard.style.animation = 'fadeIn 0.6s ease-out';
-            
-            
-    
-            btnCliente.title = "Acceder como cliente para gestionar tus servicios";
-            btnAdmin.title = "Acceder como administrador del sistema";
-        });
-    </script>
 </body>
 </html>
