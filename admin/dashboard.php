@@ -1,19 +1,24 @@
 <?php
 session_start();
 
+    if (!isset($_SESSION['usuario'])) {
+        header('Location: login.html');
+        exit();
+    }
 
-if (!isset($_SESSION['usuario'])) {
-    header('Location: login.html');
-    exit();
-}
+    $session_timeout = 3600; // 1 hora en segundos
+    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time'] > $session_timeout)) {
+        session_destroy();
+        header('Location: login.html');
+        exit();
+    }
 
+    require_once("../config/supabase.php");
+    $sql = " SELECT CONCAT(nombre, ' ', apaterno, ' ', amaterno), correo, tipo_usuario FROM tb_logeo LIMIT 1";
 
-$session_timeout = 3600; // 1 hora en segundos
-if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time'] > $session_timeout)) {
-    session_destroy();
-    header('Location: login.html');
-    exit();
-}
+    $stmt = $pdo -> prepare($sql);
+    $stmt->execute();
+    $user = $stmt->fetchone(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -76,7 +81,7 @@ if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time'] > $sessi
         </div>
         
         <nav>
-            <a href="dashboard.php" class="active">
+        <!--    <a href="dashboard.php" class="active">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
             <a href="#">
@@ -90,7 +95,7 @@ if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time'] > $sessi
             </a>
             <a href="#">
                 <i class="bi bi-bell"></i> Notificaciones
-            </a>
+            </a> -->
             <a href="logout.php" style="color: #e74c3c;">
                 <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
             </a>
