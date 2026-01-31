@@ -1,10 +1,14 @@
 <?php
-$dsn = "pgsql:host=db.exyysvmpeyhqicnxwpfz.supabase.co;port=5432;dbname=postgres";
-$user = "postgres";
-$password = "mbWMzgQ3LktvCLar";
+
+$host = getenv("DB_HOST");
+$port = getenv("DB_PORT");
+$db   = getenv("DB_NAME");
+$user = getenv("DB_USER");
+$pass = getenv("DB_PASS");
+$dsn = "pgsql:host=$host;port=$port;dbname=$db";
 
 try {
-    $pdo = new PDO($dsn, $user, $password, [
+    $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 } catch (PDOException $e) {
@@ -17,3 +21,7 @@ try {
 }
 /* DATABASE_URL=postgresql://postgres:mbWMzgQ3LktvCLar@db.exyysvmpeyhqicnxwpfz.supabase.co:5432/postgres */
 ?>
+
+
+
+
