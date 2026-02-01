@@ -1,25 +1,3 @@
-<?php
-session_start();
-
-    if (!isset($_SESSION['usuario'])) {
-        header('Location: login.html');
-        exit();
-    }
-
-    $session_timeout = 3600; // 1 hora en segundos
-    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time'] > $session_timeout)) {
-        session_destroy();
-        header('Location: login.html');
-        exit();
-    }
-
-    require_once("../config/supabase.php");
-    $sql = " SELECT CONCAT(nombre, ' ', apaterno, ' ', amaterno), correo, tipo_usuario FROM tb_logeo LIMIT 1";
-
-    $stmt = $pdo -> prepare($sql);
-    $stmt->execute();
-    $user = $stmt->fetchone(PDO::FETCH_ASSOC);
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -76,27 +54,12 @@ session_start();
     <div class="sidebar">
         <div class="user-info">
             <i class="bi bi-person-circle" style="font-size: 50px;"></i>
-            <h5 class="mt-2"><?php echo htmlspecialchars($_SESSION['usuario']); ?></h5>
+            <h5 class="mt-2" id="adminNombre"></h5>
             <p class="text-muted">Administrador</p>
         </div>
         
         <nav>
-        <!--    <a href="dashboard.php" class="active">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-            <a href="#">
-                <i class="bi bi-people"></i> Usuarios
-            </a>
-            <a href="#">
-                <i class="bi bi-bar-chart"></i> Reportes
-            </a>
-            <a href="#">
-                <i class="bi bi-gear"></i> Configuración
-            </a>
-            <a href="#">
-                <i class="bi bi-bell"></i> Notificaciones
-            </a> -->
-            <a href="logout.php" style="color: #e74c3c;">
+            <a href="#" onclick="logout()" style="color: #e74c3c;">
                 <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
             </a>
         </nav>
@@ -109,36 +72,14 @@ session_start();
         
 
         <div class="row mt-4">
-            <div class="col-md-3">
-                <div class="stats-card bg-primary">
-                    <i class="bi bi-people display-4"></i>
-                    <h3>150</h3>
-                    <p>Usuarios Activos</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card bg-success">
-                    <i class="bi bi-check-circle display-4"></i>
-                    <h3>42</h3>
-                    <p>Tickets Resueltos</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card bg-warning">
-                    <i class="bi bi-clock display-4"></i>
-                    <h3>8</h3>
-                    <p>Pendientes</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card bg-danger">
-                    <i class="bi bi-exclamation-triangle display-4"></i>
-                    <h3>3</h3>
-                    <p>Alertas</p>
+            <div class="col-md-4">
+                <div class="stats-card bg-primary text-center">
+                    <i class="bi bi-envelope display-4"></i>
+                    <h3 id="totalCorreos">0</h3>
+                    <p>Correos recibidos</p>
                 </div>
             </div>
         </div>
-
 
         <div class="card mt-4">
             <div class="card-header">
@@ -157,17 +98,7 @@ session_start();
                         <tr>
                             <td>admin</td>
                             <td>Inicio de sesión</td>
-                            <td><?php echo date('d/m/Y H:i:s'); ?></td>
-                        </tr>
-                        <tr>
-                            <td>soporte</td>
-                            <td>Actualización de ticket</td>
-                            <td>15/03/2024 10:30:22</td>
-                        </tr>
-                        <tr>
-                            <td>usuario</td>
-                            <td>Registro nuevo</td>
-                            <td>15/03/2024 09:15:10</td>
+                            <td id="fechaLogin"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -177,5 +108,56 @@ session_start();
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem("token")
+        const userData = localStorage.getItem("user")
+
+        if (!token || !userData) {
+            window.location.href = "/login.html"
+        }
+
+        const user = JSON.parse(userData)
+
+        // Datos visibles
+        document.getElementById("fechaLogin").innerText =
+            new Date().toLocaleString("es-MX")
+
+        document.getElementById("adminNombre").innerText =
+            user.nombre || user.email
+
+        // Validar sesión con backend
+        fetch("http://localhost:3000/dashboard", {
+            headers: {
+            Authorization: `Bearer ${token}`
+            }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Sesión inválida")
+            return res.json()
+        })
+        .then(data => {
+            console.log("Dashboard OK:", data)
+        })
+        .catch(() => {
+            localStorage.clear()
+            window.location.href = "/login.html"
+        })
+
+        // Stats
+        fetch("/dashboard/stats")
+            .then(res => res.json())
+            .then(data => {
+            document.getElementById("totalCorreos").textContent =
+                data.totalCorreos
+            })
+            .catch(console.error)
+
+        function logout() {
+            localStorage.clear()
+            window.location.href = "/login.html"
+        }
+    </script>
+
+
 </body>
 </html>

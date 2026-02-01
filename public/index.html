@@ -492,7 +492,7 @@
                 
                 <div class="col-lg-7">
                     <div class="bg-white rounded shadow p-4 text-dark">
-                        <form id="ctaForm" method="POST" action="backend/contacto/enviar_contacto.php">
+                        <form id="ctaForm">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" id="ctaNombre" name="nombre" placeholder="Nombre" required>
@@ -507,7 +507,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input type="email" class="form-control" id="ctaTelefono" name="telefono" placeholder="Telefono" maxlength="12" required>
+                                    <input type="text" class="form-control" id="ctaTelefono" name="telefono" placeholder="Telefono" maxlength="12" required>
                                 </div>
 
                                 <div class="col-12">
@@ -551,10 +551,10 @@
                 <div class="col-lg-3 col-md-4 mb-4">
                     <h5 class="mb-3">Servicios</h5>
                     <div class="footer-links">
-                        <a href="servicios.html#ciberseguridad">Ciberseguridad</a>
-                        <a href="servicios.html#cloud">Infraestructura Cloud</a>
-                        <a href="servicios.html#desarrollo">Desarrollo Software</a>
-                        <a href="servicios.html#soporte">Soporte Técnico</a>
+                        <a href="#servicios">Ciberseguridad</a>
+                        <a href="#servicios">Infraestructura Cloud</a>
+                        <a href="#servicios">Desarrollo Software</a>
+                        <a href="#servicios">Soporte Técnico</a>
                     </div>
                 </div>
                 
@@ -599,26 +599,39 @@
             });
         });
 
-        /* ENVIADO DE CORREO */
+        /* ENVIO DE CORREO */
         document.getElementById("ctaForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
             const form = this;
-            const respuesta = document.getElementById("ctaRespuesta");
-            fetch("enviar_contacto.php", {
-                method: "POST",
-                body: formData
-            }).then(res => res.text()).then(data => {
-                if(data.trim() == "OK"){
-                    respuesta.innerHTML = "<span class='text-success'>Mensaje enviado correctamente </span>";
-                    form.reset();
-                }else{
-                    respuesta.innerHTML = "<span class='text-danger'>Error al enviar el mensaje </span>";
-                }
-            }).catch(() => {
-                    respuesta.innerHTML = "<span class='text-danger'>Error de conexión </span>";
-            });
+            const data = {
+                nombre: form.ctaNombre.value,
+                apaterno: form.ctaApaterno.value,
+                correo: form.ctaCorreo.value,
+                telefono: form.ctaTelefono.value,
+                asunto: form.ctaAsunto.value,
+                mensaje: form.ctaMensaje.value
+            };
 
+            fetch("http://localhost:3000/contacto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(respuesta => {
+                if(respuesta.status === "OK"){
+                    alert("Mensaje enviado correctamente");
+                    form.reset();
+                } else {
+                    alert("Error al enviar el mensaje");
+                }
+            })
+            .catch(() => {
+                alert("Error de conexión con el servidor");
+            });
         });
     </script>
 </body>
