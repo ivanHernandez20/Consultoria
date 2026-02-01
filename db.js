@@ -6,7 +6,8 @@ dotenv.config()
 const sql = postgres(process.env.DATABASE_URL, {
   ssl: {
     rejectUnauthorized: false
-  }
+  },
+  hostType: 'ipv4'
   /* ssl: 'require' */
 })
 
