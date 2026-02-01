@@ -613,7 +613,9 @@
                 mensaje: form.ctaMensaje.value
             };
 
-            fetch("http://localhost:3000/contacto", {
+            const BASE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://consultoria-faai.onrender.com";
+
+            fetch(`${BASE_URL}/contacto`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
